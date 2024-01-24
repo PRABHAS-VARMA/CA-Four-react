@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react';
 
-const QuestionBox = ({ question, currentQuestion, totalQuestions, handleAnswer, highlight }) => {
+const QuestionBox = ({ question, presentQuestion, NoOfQues, answerManager, highlight }) => {
     const [selectedOption, setSelectedOption] = useState(null);
   
     const handleOptionClick = (optionId) => {
       setSelectedOption(optionId);
-      handleAnswer(optionId);
+      answerManager(optionId);
     };
 
     const focusQuestion = useRef();
@@ -15,12 +15,12 @@ const QuestionBox = ({ question, currentQuestion, totalQuestions, handleAnswer, 
     }
   
     function handleNoFocus(){
-      focusQuestion.current.style.color = "darkblue";
+      focusQuestion.current.style.color = "black";
     }
   
     return (
       <div className={`question-box ${highlight ? 'highlighted' : ''}`}>
-        <p>Question: {currentQuestion} out of {totalQuestions}</p>
+        <p>Question: {presentQuestion} out of {NoOfQues}</p>
         <h2 ref={focusQuestion}>{question.text}</h2>
         <div className="options">
           {question.options.map((option) => (

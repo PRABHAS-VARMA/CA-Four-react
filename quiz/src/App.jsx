@@ -1,4 +1,3 @@
-// App.js
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import questions from "./question.jsx";
@@ -6,23 +5,18 @@ import Result from "./components/Result.jsx";
 import QuestionBox from "./components/QuestionBox";
 
 const App = () => {
-  const [themeName, setThemeName] = useState("dark")
+  const [version, setThemeVersion] = useState("dark")
   const [theme, setTheme] = useState(true)
-  // const [darkMode, setDarkMode] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState(1);
+  const [presentQuestion, setPresentQuestion] = useState(1);
   const [userAnswers, setUserAnswers] = useState(Array(questions.length).fill(null));
-  // const [highlight, setHighlight] = useState(false);
-  const [quizFinished, setQuizFinished] = useState(false);
+  const [quizdone, quizDone] = useState(false);
 
-  // const handleDarkModeToggle = () => {
-  //   setDarkMode(!darkMode);
-  // };
 
-  const handleToggle = ()=>{
+  const versionManager = ()=>{
     setTheme(theme?false:true);
   }
 
-  function backGroundColors(color){
+  function pageColor(color){
 
     document.body.style.backgroundColor = color? "#eae7dc":"#2b2d42";
     return{
@@ -30,65 +24,54 @@ const App = () => {
     }
   }
   
-  function textColor(color){
+  function questionTextColorChange(color){
     return{
       color:color?"#2b2d42":"#eae7dc",
     }
   }
 
   useEffect(()=>{
-    setThemeName(themeName==="light"?"dark":"light")
+    setThemeVersion(version==="light"?"dark":"light")
   },[theme])
 
 
 
-  const handleAnswer = (optionId) => {
-    const updatedUserAnswers = [...userAnswers];
-    updatedUserAnswers[currentQuestion - 1] = optionId;
-    setUserAnswers(updatedUserAnswers);
+  const answerManager = (x) => {
+    const refreshedAnswer = [...userAnswers];
+    refreshedAnswer[presentQuestion - 1] = x;
+    setUserAnswers(refreshedAnswer);
 
-    // Move to the next question if not the last question
-    if (currentQuestion < questions.length) {
-      setCurrentQuestion(currentQuestion + 1);
+    if (presentQuestion < questions.length) {
+      setPresentQuestion(presentQuestion + 1);
     } else {
-      // Quiz is finished
-      setQuizFinished(true);
+      quizDone(true);
     }
   };
 
-  const calculateScore = () => {
+  const scoreUpdater = () => {
     return userAnswers.filter((answer, index) => answer === questions[index].options.findIndex(opt => opt.isCorrect)).length;
   };
 
-  const score = calculateScore();
-
-  // const focusQuestion = useRef();
-
-  // const handleHighlight = () => {
-  //   focusQuestion.current.style.color = "red";  }
-
-  // const handleRemoveHighlight = () => {
-  //   focusQuestion.current.style.color = "darkblue";
-  // }
+  const score = scoreUpdater();
 
   const handleReplay = () => {
-    setCurrentQuestion(1);
+    setPresentQuestion(1);
     setUserAnswers(Array(questions.length).fill(null));
-    setQuizFinished(false);
+    quizDone(false);
   };
 
   return (
-    <div className="page"  style={backGroundColors(theme)}>
+    <div className="page"  style={pageColor(theme)}>
       <div className="header">
-        <div className="logo" style={textColor(theme)}>Kalvium</div>
-        <button id="theme" className="toggle-button" onClick={handleToggle}>
-        {themeName}</button>
+        <div className="headin" style={questionTextColorChange(theme)}>Kalvium</div>
+        <button id="theme" className="toggle-button" onClick={versionManager}>
+        {version}</button>
       </div>
 
       <div className="app">
-        {quizFinished ? (
-          <div className="result-popup">
-            <Result score={score} totalQuestions={questions.length} />
+        {quizdone ? (
+          <div className="Finalresult">
+            <Result score={score} NoOfQues={questions.length} />
             <button id="replay" onClick={handleReplay}>
               Replay the Quiz
             </button>
@@ -96,21 +79,10 @@ const App = () => {
         ) : (
           <div>
             <QuestionBox
-              question={questions[currentQuestion - 1]}
-              currentQuestion={currentQuestion}
-              totalQuestions={questions.length}
-              handleAnswer={handleAnswer}
-              // highlight={highlight}
-            />
-
-            {/* <div className="button-container">
-              <button class="buttio"id="high" onClick={handleHighlight}>
-                Highlight
-              </button>
-              <button  class="buttio"  id="remove" onClick={handleRemoveHighlight}>
-                Remove Highlight
-              </button>
-            </div> */}
+              question={questions[presentQuestion - 1]}
+              presentQuestion={presentQuestion}
+              NoOfQues={questions.length}
+              answerManager={answerManager}/>
           </div>
         )}
       </div>

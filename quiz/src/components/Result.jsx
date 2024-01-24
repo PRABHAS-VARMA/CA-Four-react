@@ -1,13 +1,13 @@
 import React from 'react';
 
-const Result = ({ score, totalQuestions }) => {
-  const percentage = (score / totalQuestions) * 100;
+const Result = ({ score, NoOfQues }) => {
+  const percentage = (score / NoOfQues) * 100;
 
   return (
     <div className="result-box">
-      <h2>Your Result</h2>
-      <p>{`You scored ${score} out of ${totalQuestions}`}</p>
-      <p>{`Percentage: ${percentage}%`}</p>
+      <h2>Result!!!</h2>
+      <p>{`${score} out of ${NoOfQues} were correct`}</p>
+      <p>{`Total Percentage: ${percentage}%`}</p>
     </div>
   );
 };
